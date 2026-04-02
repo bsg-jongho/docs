@@ -1,0 +1,48 @@
+---
+title: 스캔 스케줄
+description: 스캔 시작 시간 및 주기 변경 방법을 안내합니다.
+icon: clock
+---
+
+## 기본 설정
+
+| 항목 | 기본값 |
+| --- | --- |
+| 스캔 시작 시간 | 매일 02:00 |
+| 타임존 | Asia/Seoul (KST) |
+| 실행 주체 | Amazon EventBridge Scheduler |
+
+<Info>
+  **왜 새벽 2시인가:**
+  - **데이터 완전성:** CloudTrail, Security Hub 이벤트 전파에 수 시간 소요. 새벽 2시면 전일 이벤트 대부분 반영
+  - **업무 영향 최소화:** API 호출 빈도가 높아 Rate Limiting 영향 가능. 새벽 시간대 실행으로 최소화
+  - **아침 업무 전 확인:** 보안 담당자가 출근 시 최신 데이터 확인 가능
+</Info>
+
+## 스케줄 변경
+
+Terraform 변수를 통해 변경합니다:
+
+```
+scan_schedule_expression = "cron(0 18 * * ? *)"  # 03:00 KST
+scan_schedule_timezone   = "Asia/Seoul"
+```
+
+변경 후 Terraform 적용이 필요합니다.
+
+<Warning>
+  스캔 시간을 너무 이르게 설정하면(예: 00:30 KST) 전일 이벤트가 아직 전파되지 않아 **누락될 수 있습니다.**
+</Warning>
+
+## 수동 실행
+
+정기 스캔 외에 즉시 스캔이 필요한 경우:
+
+1. AWS 콘솔 → Step Functions → 상태 머신 목록
+2. `isms-p-compliance` 상태 머신 선택
+3. "실행 시작" 클릭
+4. 입력값은 빈 JSON `{}`
+
+<Info>
+  수동 실행 시에도 전일 데이터를 수집합니다. 당일 변경사항을 즉시 확인하고 싶다면 다음날 스캔 결과를 기다려야 합니다.
+</Info>

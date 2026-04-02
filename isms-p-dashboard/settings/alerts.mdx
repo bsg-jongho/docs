@@ -1,0 +1,49 @@
+---
+title: 알림 설정
+description: 스캔 파이프라인 장애 알림 설정 방법을 안내합니다.
+icon: bell
+---
+
+## 개요
+
+<Warning>
+  이 알림은 **시스템 장애 알림**입니다. 보안 이슈(Critical FAIL 발생 등)에 대한 알림이 아닙니다. 보안 이슈는 대시보드를 직접 확인하여 파악해야 합니다.
+</Warning>
+
+## 알림 발생 조건
+
+| 조건 | 설명 |
+| --- | --- |
+| **FAILED** | Step Functions 실행 중 오류 발생 |
+| **TIMED_OUT** | 전체 실행이 2시간 초과 |
+| **ABORTED** | 실행이 수동으로 중단됨 |
+
+## 알림 수신 설정
+
+알림은 Amazon SNS 토픽을 통해 이메일로 발송됩니다.
+
+**초기 설정:**
+- Terraform의 `admin_email` 변수에 지정된 이메일로 구독 요청이 발송됩니다
+- 이메일에서 **"AWS Notification - Subscription Confirmation"**을 확인하고 **구독 확인 링크를 클릭**해야 합니다
+
+<Warning>
+  **구독을 확인하지 않으면 알림을 받을 수 없습니다.** 반드시 이메일 수신함을 확인하세요.
+</Warning>
+
+**수신자 추가:**
+
+AWS 콘솔 → SNS → 토픽 → `isms-p-alerts-{suffix}` → 구독 생성 → 이메일 주소 입력
+
+## 알림 수신 시 대응
+
+알림 이메일에서 `executionArn`을 확인한 후:
+
+1. AWS 콘솔 → Step Functions → 해당 실행 클릭
+2. 실패한 단계와 오류 메시지 확인
+3. [장애 대응 가이드](/isms-p-dashboard/operations/troubleshooting)에 따라 조치
+
+## 보안 이슈 자동 알림이 필요한 경우
+
+현재 대시보드는 보안 이슈에 대한 자동 알림을 제공하지 않습니다. 필요 시:
+- AWS Security Hub의 자체 알림 기능 활용
+- Amazon EventBridge + SNS를 활용한 커스텀 알림 구성

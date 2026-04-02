@@ -1,0 +1,73 @@
+---
+title: 장애 대응
+description: 스캔 실패, 데이터 미반영 등 장애 발생 시 대응 절차를 안내합니다.
+icon: wrench
+---
+
+## 알림 수신 시 대응 절차
+
+| 순서 | 단계 | 설명 |
+| --- | --- | --- |
+| 1 | 알림 수신 | 이메일에서 `executionArn` 확인 |
+| 2 | 실패 실행 확인 | AWS 콘솔 → Step Functions → 해당 실행 클릭 |
+| 3 | 실패 단계 식별 | 아래 증상별 대응 참고 |
+
+## 증상별 대응
+
+### ScanRole AssumeRole 오류
+
+**증상:** Lambda 로그에 `AccessDenied` 또는 `is not authorized to perform: sts:AssumeRole`
+
+| 원인 | 확인 방법 | 조치 |
+| --- | --- | --- |
+| 대상 계정에 ScanRole 없음 | 대상 계정 IAM 콘솔 확인 | [계정 관리](/isms-p-dashboard/settings/accounts) 참고하여 ScanRole 생성 |
+| 신뢰 관계 오류 | ScanRole Trust Policy 확인 | 중앙 계정 Lambda 역할 ARN 확인 |
+| ExternalId 불일치 | Trust Policy Condition 확인 | `isms-p-{중앙계정ID}` 형식으로 수정 |
+
+### 스캔 타임아웃
+
+**증상:** 스캔 Lambda가 시간 초과 (600초)
+
+<Info>
+  **조치:** Terraform 변수 `scan_memory_size`를 증가 (기본 2048MB → 4096MB). 메모리 증가 시 CPU도 비례 증가하여 스캔 속도가 향상됩니다.
+</Info>
+
+### Security Hub 미활성
+
+**증상:** Security Hub Findings 수집에서 `SecurityHub is not enabled`
+
+**조치:**
+1. 대상 계정 AWS 콘솔 → Security Hub → 활성화
+2. GuardDuty, Inspector 통합 서비스도 활성화 권고
+3. 활성화 직후 Findings가 없을 수 있음 (24시간 후부터 수집 시작)
+
+### Glue ETL 실패
+
+| 원인 | 확인 방법 | 조치 |
+| --- | --- | --- |
+| 스키마 변경 | Glue 작업 로그 (CloudWatch) | 원본 데이터(raw/) 확인 |
+| 메모리 부족 | Glue 작업 메트릭 | 워커 수/유형 조정 |
+| S3 접근 오류 | 로그의 Permission 오류 | Glue 실행 역할 S3 권한 확인 |
+
+### 대시보드 데이터 미반영
+
+**증상:** 스캔은 성공했으나 대시보드에 최신 데이터 미표시
+
+**확인 순서:**
+
+1. **S3에 데이터 존재 확인** → 없으면 Glue ETL 실패
+2. **Athena에서 쿼리** → 결과 0이면 파티션 미등록, Glue ETL 재실행
+3. **QuickSight DataSource 연결** → 연결 실패 시 IAM 역할 확인
+4. **브라우저 새로고침** → DIRECT_QUERY이므로 별도 새로고침만 필요
+
+### 전체 실행 타임아웃
+
+**증상:** Step Functions 실행이 2시간 초과
+
+<Warning>
+  어느 단계에서 시간을 소요했는지 Step Functions 실행 이력에서 확인하세요. 특정 계정의 스캔이 느리면 해당 계정의 리소스 수를 확인하고, 메모리 증가를 검토합니다.
+</Warning>
+
+## 긴급 연락
+
+시스템 장애가 지속되거나 위 조치로 해결되지 않는 경우, BSG Partners 기술 지원에 연락하세요.

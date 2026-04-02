@@ -1,0 +1,104 @@
+---
+title: 데이터 수집 주기와 범위
+description: 스캔 시점, 수집 대상, 보존 기간에 대해 설명합니다.
+icon: clock
+---
+
+## 수집 주기
+
+| 항목 | 값 |
+| --- | --- |
+| 스캔 시작 시간 | 매일 02:00 KST (17:00 UTC 전일) |
+| 수집 대상 기간 | 전일 00:00 ~ 23:59 UTC |
+| 전체 소요 시간 | 약 30-60분 (5개 계정 기준) |
+| 대시보드 반영 | 스캔 완료 즉시 (DIRECT_QUERY) |
+
+<Info>
+  **예시:** 4월 1일 02:00 KST에 스캔이 시작되면, 3월 31일 00:00~23:59 UTC 사이에 발생한 Security Hub Findings와 CloudTrail 이벤트를 수집합니다. 컴플라이언스 점검은 스캔 시점의 현재 상태를 점검합니다.
+</Info>
+
+## 수집 데이터 상세
+
+### 1. 컴플라이언스 자동 점검
+
+최신 ISMS-P 프레임워크 기준의 보안 점검 결과를 수집합니다.
+
+**수집 내용:**
+- 각 점검 항목(check)에 대해 **PASS**(통과) 또는 **FAIL**(미통과) 판정
+- 점검 대상: IAM, S3, EC2, VPC, KMS, CloudTrail, Lambda 등 주요 AWS 서비스
+- 200개 이상의 보안 점검 항목
+
+| 필드 | 예시 값 | 설명 |
+| --- | --- | --- |
+| status_code | FAIL | 점검 결과 (PASS/FAIL) |
+| severity | Critical | 심각도 (Critical/High/Medium/Low) |
+| check_id | iam_root_mfa_enabled | 점검 항목 코드 |
+| resource_arn | arn:aws:iam::123456:root | 대상 리소스 |
+| categories | Access Control | ISMS-P 도메인 분류 |
+
+<Info>
+  **일일 비교:** 전일 결과와 자동 비교하여 **NEW**(신규 실패), **FIXED**(해결), **REGRESSION**(재발)을 자동 분류합니다. 이 결과는 [개선 현황](/isms-p-dashboard/menu-guide/remediation) 시트에서 확인할 수 있습니다.
+</Info>
+
+### 2. Security Hub Findings
+
+AWS 보안 서비스들이 탐지한 보안 이슈를 수집합니다.
+
+**수집 조건:**
+- 상태: `ACTIVE` (해결되지 않은 것만)
+- 기간: 전일 00:00 ~ 23:59 UTC에 업데이트된 것
+- 소스: GuardDuty(위협 탐지), Inspector(취약점 스캔), Security Hub 자체 점검
+
+**데이터 특성:**
+- 이벤트 데이터: 특정 시점에 탐지된 보안 이슈
+- 심각도 포함: Critical, High, Medium, Low, Informational
+- 일부 findings에 조치 방법(remediation) 포함
+
+### 3. CloudTrail 보안 이벤트
+
+보안에 영향을 미치는 AWS API 호출 이력만 **선별 수집**합니다.
+
+<Warning>
+  전체 CloudTrail을 수집하는 것이 아닙니다. 보안 관련 이벤트만 필터링하여 수집합니다.
+</Warning>
+
+**수집 대상 이벤트:**
+
+| 카테고리 | 이벤트 | 보안 의미 |
+| --- | --- | --- |
+| **IAM** | CreateUser, DeleteUser, CreateRole, DeleteRole | 계정/역할 변경 — 무단 접근 시도 가능 |
+| **IAM** | AttachUserPolicy, PutUserPolicy | 권한 변경 — 권한 상승 공격 가능 |
+| **IAM** | CreateAccessKey, DeleteAccessKey | 액세스 키 관리 — 키 유출 위험 |
+| **로그인** | ConsoleLogin | 콘솔 로그인 — 무단 접근 탐지 |
+| **EC2/VPC** | AuthorizeSecurityGroupIngress/Egress | 보안 그룹 변경 — 네트워크 노출 위험 |
+| **KMS** | CreateKey, DisableKey, ScheduleKeyDeletion | 암호화 키 조작 — 데이터 보호 약화 |
+| **S3** | PutBucketPolicy, PutBucketAcl, PutPublicAccessBlock | 버킷 정책 변경 — 데이터 노출 위험 |
+| **CloudTrail** | StopLogging, DeleteTrail | 감사 로그 조작 — 증거 인멸 시도 |
+| **Lambda** | CreateFunction, UpdateFunctionCode, DeleteFunction | 서버리스 코드 변경 — 악성 코드 삽입 가능 |
+| **CloudWatch** | DeleteLogGroup, DeleteLogStream | 로그 삭제 — 증거 인멸 시도 |
+
+**수집 범위:**
+- **글로벌 이벤트** (IAM, ConsoleLogin): us-east-1에서만 수집
+- **리전별 이벤트** (EC2, KMS, S3 등): 활성화된 모든 리전에서 수집
+
+## 계정별 병렬 처리
+
+<Info>
+  각 계정에서 3개 수집기가 **동시 실행**되고, 최대 5개 계정이 **병렬 처리**됩니다. 모든 계정 스캔 완료 후 Glue ETL이 일괄 변환합니다.
+</Info>
+
+| 단계 | 처리 방식 | 소요 시간 |
+| --- | --- | --- |
+| 계정별 스캔 | 계정 내 3개 수집기 동시 실행, 최대 5개 계정 병렬 | 5-10분/계정 |
+| Glue ETL 변환 | 전체 데이터 일괄 변환 | 10-20분 |
+| 대시보드 반영 | Athena DIRECT_QUERY | 즉시 |
+
+| 계정 수 | 예상 스캔 시간 |
+| --- | --- |
+| 1-5 | 30-60분 |
+| 6-10 | 60-90분 |
+| 11-20 | 90-120분 |
+
+<Info>
+  최대 5개 계정이 동시에 스캔됩니다. 등록된 계정이 5개를 초과하면 순차적으로 처리됩니다.
+</Info>

@@ -1,0 +1,45 @@
+---
+title: 메뉴 가이드
+description: 대시보드 9개 시트(탭)별 구성 요소, 표시 항목, 활용 방법을 안내합니다.
+icon: table-columns
+---
+
+대시보드는 9개의 시트(탭)로 구성되어 있으며, 각 시트는 ISMS-P 인증 기준의 보안 도메인에 매핑됩니다.
+
+<Columns cols={3}>
+  <Card title="Overview (전체 현황)" href="/isms-p-dashboard/menu-guide/overview" icon="gauge-high" horizontal>
+    전체 준수율, Critical 실패 건수, 일일 변경 현황
+  </Card>
+
+  <Card title="접근권한 관리" href="/isms-p-dashboard/menu-guide/access-control" icon="key" horizontal>
+    Root MFA, User MFA, 액세스 키 관리
+  </Card>
+
+  <Card title="네트워크 보안" href="/isms-p-dashboard/menu-guide/network" icon="network-wired" horizontal>
+    보안 그룹, VPC Flow Logs, 퍼블릭 노출
+  </Card>
+
+  <Card title="암호화" href="/isms-p-dashboard/menu-guide/encryption" icon="lock" horizontal>
+    S3, EBS, KMS 암호화 적용 현황
+  </Card>
+
+  <Card title="로깅/모니터링" href="/isms-p-dashboard/menu-guide/logging" icon="file-lines" horizontal>
+    CloudTrail, CloudWatch 로깅 설정
+  </Card>
+
+  <Card title="자산 관리" href="/isms-p-dashboard/menu-guide/asset-management" icon="server" horizontal>
+    전체 리소스 보안 점검 현황
+  </Card>
+
+  <Card title="취약점 관리" href="/isms-p-dashboard/menu-guide/vulnerability" icon="bug" horizontal>
+    GuardDuty, Inspector 탐지 결과
+  </Card>
+
+  <Card title="백업/복구" href="/isms-p-dashboard/menu-guide/backup" icon="database" horizontal>
+    백업 설정, 멀티-AZ, 복원력
+  </Card>
+
+  <Card title="개선 현황" href="/isms-p-dashboard/menu-guide/remediation" icon="arrow-trend-up" horizontal>
+    일일 변경 추이 (NEW/FIXED/REGRESSION)
+  </Card>
+</Columns>

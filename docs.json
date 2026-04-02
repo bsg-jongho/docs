@@ -1,68 +1,64 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "BSG Marketplace Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#3B82F6",
+    "light": "#60A5FA",
+    "dark": "#2563EB"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Guide",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "ISMS-P Intelligence Dashboard",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "isms-p-dashboard/index",
+              "isms-p-dashboard/operations-manual"
             ]
           },
           {
-            "group": "Customization",
+            "group": "개요",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "isms-p-dashboard/overview/index",
+              "isms-p-dashboard/overview/architecture",
+              "isms-p-dashboard/overview/data-collection"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "메뉴 가이드",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "isms-p-dashboard/menu-guide/index",
+              "isms-p-dashboard/menu-guide/overview",
+              "isms-p-dashboard/menu-guide/access-control",
+              "isms-p-dashboard/menu-guide/network",
+              "isms-p-dashboard/menu-guide/encryption",
+              "isms-p-dashboard/menu-guide/logging",
+              "isms-p-dashboard/menu-guide/asset-management",
+              "isms-p-dashboard/menu-guide/vulnerability",
+              "isms-p-dashboard/menu-guide/backup",
+              "isms-p-dashboard/menu-guide/remediation"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "설정 가이드",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
+              "isms-p-dashboard/settings/index",
+              "isms-p-dashboard/settings/accounts",
+              "isms-p-dashboard/settings/schedule",
+              "isms-p-dashboard/settings/alerts"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "운영 절차",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "isms-p-dashboard/operations/index",
+              "isms-p-dashboard/operations/daily-check",
+              "isms-p-dashboard/operations/troubleshooting",
+              "isms-p-dashboard/operations/faq"
             ]
           }
         ]
@@ -71,14 +67,14 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "BSG Marketplace",
+          "href": "https://marketplace.bsggo.com/",
+          "icon": "globe"
         },
         {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "AWS Marketplace",
+          "href": "https://aws.amazon.com/marketplace/seller-profile?id=seller-f57nrtrpgz6xe",
+          "icon": "aws"
         }
       ]
     }
@@ -90,33 +86,14 @@
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "BSG Global",
+        "href": "https://www.bsgglobal.com/"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/bmp-cloud"
     }
   }
 }

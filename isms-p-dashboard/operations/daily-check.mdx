@@ -1,0 +1,79 @@
+---
+title: 일상 점검
+description: 매일/주간/월간 확인해야 할 보안 점검 항목을 안내합니다.
+icon: clipboard-check
+---
+
+## 매일 확인 항목
+
+아침 업무 시작 시 다음 항목을 순서대로 확인합니다.
+
+### 1. 스캔 정상 실행 확인
+
+AWS 콘솔 → Step Functions → `isms-p-compliance` → 최근 실행
+
+| 상태 | 의미 | 조치 |
+| --- | --- | --- |
+| Succeeded | 정상 완료 | 다음 단계로 |
+| Failed | 스캔 실패 | [장애 대응](/isms-p-dashboard/operations/troubleshooting) 참고 |
+| Running | 아직 실행 중 | 30분 후 재확인 |
+| Timed Out | 시간 초과 | [장애 대응](/isms-p-dashboard/operations/troubleshooting) 참고 |
+| 실행 없음 | 스케줄러 오류 | EventBridge 스케줄 확인 |
+
+### 2. Overview 시트 확인
+
+<Tip>
+  **체크리스트:**
+  - [ ] 전체 준수율: 전일 대비 변화 확인
+  - [ ] Critical 실패 건수: 0인지 확인. 0이 아니면 즉시 해당 도메인 시트로 이동
+  - [ ] 일일 변경: NEW와 REGRESSION 확인
+</Tip>
+
+### 3. REGRESSION 항목 확인
+
+[개선 현황](/isms-p-dashboard/menu-guide/remediation) 시트에서 REGRESSION이 있는지 확인합니다.
+
+- REGRESSION이 있으면 → 해당 도메인 시트에서 상세 확인
+- 동일 항목이 반복 재발하면 → 근본 원인 분석 필요
+
+### 4. 신규 Critical/High 확인
+
+접근권한, 네트워크, 암호화 시트를 순회하며 Critical FAIL이 새로 발생했는지 확인합니다.
+
+<Warning>
+  특히 확인: Root MFA 미설정, 0.0.0.0/0 보안 그룹, 미암호화 리소스
+</Warning>
+
+## 주간 확인 항목
+
+### 1. 추이 분석
+
+[개선 현황](/isms-p-dashboard/menu-guide/remediation) 시트에서 주간 추이:
+
+- FIXED vs NEW 비율 → FIXED가 더 많아야 함
+- REGRESSION 추세 → 감소 추세여야 함
+- 전체 FAIL 건수 추이 → 감소 추세여야 함
+
+### 2. 취약점 시트 확인
+
+Security Hub Findings에서:
+- 미조치 Critical/High findings 확인
+- 오래된(7일 이상) findings 식별 → 조치 지연 사유 확인
+
+## 월간 확인 항목
+
+### 1. 계정 목록 검토
+
+- 등록된 계정이 실제 운영 계정과 일치하는지 확인
+- 신규 계정 누락 여부, 폐기 계정 잔류 여부 확인
+
+### 2. 데이터 보존 상태
+
+- S3 raw/ 데이터가 정상적으로 90일 후 삭제되는지 확인
+- processed/ 데이터 용량 추이 확인
+
+### 3. 보고서 작성
+
+- 월간 준수율 변화 추이
+- Critical/High 해결 건수
+- 주요 개선 활동 내역
