@@ -14,53 +14,65 @@
         "tab": "Guide",
         "groups": [
           {
-            "group": "ISMS-P Intelligence Dashboard",
+            "group": "Solutions",
             "pages": [
-              "isms-p-dashboard/index",
-              "isms-p-dashboard/operations-manual",
+              "index",
               {
-                "group": "개요",
-                "icon": "circle-info",
+                "group": "ISMS-P Intelligence Dashboard",
+                "icon": "shield-halved",
+                "expanded": false,
                 "pages": [
-                  "isms-p-dashboard/overview/index",
-                  "isms-p-dashboard/overview/architecture",
-                  "isms-p-dashboard/overview/data-collection"
-                ]
-              },
-              {
-                "group": "메뉴 가이드",
-                "icon": "table-columns",
-                "pages": [
-                  "isms-p-dashboard/menu-guide/index",
-                  "isms-p-dashboard/menu-guide/overview",
-                  "isms-p-dashboard/menu-guide/access-control",
-                  "isms-p-dashboard/menu-guide/network",
-                  "isms-p-dashboard/menu-guide/encryption",
-                  "isms-p-dashboard/menu-guide/logging",
-                  "isms-p-dashboard/menu-guide/asset-management",
-                  "isms-p-dashboard/menu-guide/vulnerability",
-                  "isms-p-dashboard/menu-guide/backup",
-                  "isms-p-dashboard/menu-guide/remediation"
-                ]
-              },
-              {
-                "group": "설정 가이드",
-                "icon": "gear",
-                "pages": [
-                  "isms-p-dashboard/settings/index",
-                  "isms-p-dashboard/settings/accounts",
-                  "isms-p-dashboard/settings/schedule",
-                  "isms-p-dashboard/settings/alerts"
-                ]
-              },
-              {
-                "group": "운영 절차",
-                "icon": "clipboard-check",
-                "pages": [
-                  "isms-p-dashboard/operations/index",
-                  "isms-p-dashboard/operations/daily-check",
-                  "isms-p-dashboard/operations/troubleshooting",
-                  "isms-p-dashboard/operations/faq"
+                  "isms-p-dashboard/index",
+                  "isms-p-dashboard/operations-manual",
+                  {
+                    "group": "개요",
+                    "icon": "circle-info",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/overview/index",
+                      "isms-p-dashboard/overview/architecture",
+                      "isms-p-dashboard/overview/data-collection"
+                    ]
+                  },
+                  {
+                    "group": "메뉴 가이드",
+                    "icon": "table-columns",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/menu-guide/index",
+                      "isms-p-dashboard/menu-guide/overview",
+                      "isms-p-dashboard/menu-guide/access-control",
+                      "isms-p-dashboard/menu-guide/network",
+                      "isms-p-dashboard/menu-guide/encryption",
+                      "isms-p-dashboard/menu-guide/logging",
+                      "isms-p-dashboard/menu-guide/asset-management",
+                      "isms-p-dashboard/menu-guide/vulnerability",
+                      "isms-p-dashboard/menu-guide/backup",
+                      "isms-p-dashboard/menu-guide/remediation"
+                    ]
+                  },
+                  {
+                    "group": "설정 가이드",
+                    "icon": "gear",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/settings/index",
+                      "isms-p-dashboard/settings/accounts",
+                      "isms-p-dashboard/settings/schedule",
+                      "isms-p-dashboard/settings/alerts"
+                    ]
+                  },
+                  {
+                    "group": "운영 절차",
+                    "icon": "clipboard-check",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/operations/index",
+                      "isms-p-dashboard/operations/daily-check",
+                      "isms-p-dashboard/operations/troubleshooting",
+                      "isms-p-dashboard/operations/faq"
+                    ]
+                  }
                 ]
               }
             ]
