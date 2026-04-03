@@ -37,7 +37,11 @@ isms-p target add <계정 ID>
 
 ## 방법 2: Terraform Cloud UI에서 추가
 
-Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을 추가할 수 있습니다. 변수 슬롯은 `target_01`부터 `target_20`까지 20개가 미리 정의되어 있으며, 사용할 슬롯에 값을 채우는 방식입니다.
+Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을 추가할 수 있습니다.
+
+<Info>
+  CLI(`isms-p target add`)를 사용하면 슬롯 변수 생성과 자격 증명 입력이 자동으로 처리됩니다. TFC UI에서 직접 작업하는 경우 아래 단계를 모두 수동으로 수행해야 합니다.
+</Info>
 
 ### 1단계: 현재 슬롯 상태 확인
 
@@ -48,9 +52,24 @@ Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을
 ["111111111111", "222222222222"]
 ```
 
-### 2단계: target_slot_map 끝에 계정 ID 추가
+### 2단계: 자격 증명 변수 생성
 
-**반드시 기존 목록의 끝에 추가하세요.** 중간에 삽입하거나 순서를 변경하면 기존 계정의 슬롯 매핑이 꼬여 자격 증명이 다른 계정에 연결될 수 있습니다.
+TFC UI에서 계정을 추가할 때는 해당 슬롯의 자격 증명 변수를 **직접 생성**해야 합니다. (CLI 사용 시에는 자동으로 생성됩니다.)
+
+추가할 계정이 3번째라면, 워크스페이스 > Variables에서 다음 2개 변수를 **새로 생성**합니다:
+
+| 변수명 | 값 | Category | 설정 |
+| --- | --- | --- | --- |
+| `target_03_access_key` | 대상 계정의 Access Key ID | Terraform variable | **Sensitive 체크** |
+| `target_03_secret_key` | 대상 계정의 Secret Access Key | Terraform variable | **Sensitive 체크** |
+
+<Warning>
+  **변수를 생성하지 않고 `target_slot_map`만 수정하면 스캔이 실패합니다.** Terraform 코드에 default=""로 정의되어 있어 Apply 자체는 성공하지만, 자격 증명이 비어있어 ScanRole을 생성할 수 없습니다.
+</Warning>
+
+### 3단계: target_slot_map 끝에 계정 ID 추가
+
+`target_slot_map` 변수를 수정하여 **기존 목록의 끝에** 새 계정 ID를 추가합니다.
 
 ```
 ["111111111111", "222222222222", "333333333333"]
@@ -58,21 +77,6 @@ Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을
 
 <Warning>
   **기존 계정의 순서를 절대 변경하지 마세요.** 슬롯 번호와 순서가 1:1 매핑되어 있습니다. 첫 번째 = `target_01_*`, 두 번째 = `target_02_*` 입니다. 순서가 바뀌면 자격 증명이 잘못된 계정에 적용됩니다.
-</Warning>
-
-### 3단계: 해당 슬롯의 자격 증명 입력
-
-추가한 계정이 3번째라면, 다음 두 변수를 찾아서 값을 입력합니다:
-
-| 변수명 | 값 | 설정 |
-| --- | --- | --- |
-| `target_03_access_key` | 대상 계정의 Access Key ID | — |
-| `target_03_secret_key` | 대상 계정의 Secret Access Key | **Sensitive 체크** |
-
-이 변수들은 이미 빈 값으로 존재합니다. 새로 만드는 것이 아니라 기존 변수의 값을 채우는 것입니다.
-
-<Warning>
-  **`target_slot_map`과 자격 증명은 반드시 함께 설정하세요.** 계정 ID만 추가하고 자격 증명을 입력하지 않으면, ScanRole을 생성할 수 없어 해당 계정의 스캔이 실패합니다.
 </Warning>
 
 ### 4단계: Apply 실행
