@@ -66,16 +66,16 @@ AWS 보안 서비스들이 탐지한 보안 이슈를 수집합니다.
 
 | 카테고리 | 이벤트 | 보안 의미 |
 | --- | --- | --- |
-| **IAM** | CreateUser, DeleteUser, CreateRole, DeleteRole | 계정/역할 변경 -- 무단 접근 시도 가능 |
-| **IAM** | AttachUserPolicy, PutUserPolicy | 권한 변경 -- 권한 상승 공격 가능 |
-| **IAM** | CreateAccessKey, DeleteAccessKey | 액세스 키 관리 -- 키 유출 위험 |
-| **로그인** | ConsoleLogin | 콘솔 로그인 -- 무단 접근 탐지 |
-| **EC2/VPC** | AuthorizeSecurityGroupIngress/Egress | 보안 그룹 변경 -- 네트워크 노출 위험 |
-| **KMS** | CreateKey, DisableKey, ScheduleKeyDeletion | 암호화 키 조작 -- 데이터 보호 약화 |
-| **S3** | PutBucketPolicy, PutBucketAcl, PutPublicAccessBlock | 버킷 정책 변경 -- 데이터 노출 위험 |
-| **CloudTrail** | StopLogging, DeleteTrail | 감사 로그 조작 -- 증거 인멸 시도 |
-| **Lambda** | CreateFunction, UpdateFunctionCode, DeleteFunction | 서버리스 코드 변경 -- 악성 코드 삽입 가능 |
-| **CloudWatch** | DeleteLogGroup, DeleteLogStream | 로그 삭제 -- 증거 인멸 시도 |
+| **IAM** | CreateUser, DeleteUser, CreateRole, DeleteRole | 계정/역할 생성 및 삭제 — 무단 접근 시도 가능 |
+| **IAM** | AttachUserPolicy, DetachUserPolicy, AttachRolePolicy, DetachRolePolicy, PutUserPolicy, PutRolePolicy | 권한 변경 — 권한 상승 공격 가능 |
+| **IAM** | CreateAccessKey, DeleteAccessKey | 액세스 키 관리 — 키 유출 위험 |
+| **로그인** | ConsoleLogin | 콘솔 로그인 — 무단 접근 탐지 |
+| **EC2/VPC** | AuthorizeSecurityGroupIngress/Egress, RevokeSecurityGroupIngress/Egress, CreateSecurityGroup, DeleteSecurityGroup | 보안 그룹 생성/삭제/규칙 변경 — 네트워크 노출 위험 |
+| **KMS** | CreateKey, DisableKey, EnableKey, ScheduleKeyDeletion | 암호화 키 조작 — 데이터 보호 약화 |
+| **S3** | PutBucketPolicy, DeleteBucketPolicy, PutBucketAcl, PutPublicAccessBlock, DeletePublicAccessBlock | 버킷 정책/ACL/퍼블릭 접근 변경 — 데이터 노출 위험 |
+| **CloudTrail** | StopLogging, DeleteTrail, UpdateTrail | 감사 로그 설정 조작 — 증거 인멸 시도 |
+| **Lambda** | CreateFunction, DeleteFunction, UpdateFunctionCode, UpdateFunctionConfiguration, AddPermission, RemovePermission | 서버리스 코드/설정/권한 변경 — 악성 코드 삽입, 권한 탈취 가능 |
+| **CloudWatch** | DeleteLogGroup, DeleteLogStream | 로그 삭제 — 증거 인멸 시도 |
 
 **수집 범위:**
 - **글로벌 이벤트** (IAM, ConsoleLogin): us-east-1에서만 수집
