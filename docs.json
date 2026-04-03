@@ -84,6 +84,22 @@
     "light": "/logo/bsg-partners-light.svg",
     "dark": "/logo/bsg-partners-dark.svg"
   },
+  "navbar": {
+    "links": [
+      {
+        "label": "BSG Partners 홈페이지",
+        "href": "https://www.bsgglobal.com/"
+      },
+      {
+        "label": "제품 소개",
+        "href": "https://marketplace.bsggo.com/"
+      },
+      {
+        "label": "AWS Marketplace에서 구매",
+        "href": "https://aws.amazon.com/marketplace/seller-profile?id=seller-f57nrtrpgz6xe"
+      }
+    ]
+  },
   "footer": {
     "links": [
       {
