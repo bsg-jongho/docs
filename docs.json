@@ -28,7 +28,6 @@
                     "icon": "circle-info",
                     "expanded": false,
                     "pages": [
-                      "isms-p-dashboard/overview/index",
                       "isms-p-dashboard/overview/architecture",
                       "isms-p-dashboard/overview/data-collection"
                     ]
@@ -38,7 +37,6 @@
                     "icon": "table-columns",
                     "expanded": false,
                     "pages": [
-                      "isms-p-dashboard/menu-guide/index",
                       "isms-p-dashboard/menu-guide/overview",
                       "isms-p-dashboard/menu-guide/access-control",
                       "isms-p-dashboard/menu-guide/network",
@@ -55,7 +53,6 @@
                     "icon": "gear",
                     "expanded": false,
                     "pages": [
-                      "isms-p-dashboard/settings/index",
                       "isms-p-dashboard/settings/accounts",
                       "isms-p-dashboard/settings/schedule",
                       "isms-p-dashboard/settings/alerts"
