@@ -6,7 +6,7 @@ icon: users
 
 ## 개요
 
-대시보드는 여러 AWS 계정을 동시에 모니터링할 수 있습니다. 스캔 대상 계정은 S3에 저장된 설정 파일(`config/accounts.json`)로 관리됩니다.
+대시보드는 여러 AWS 계정을 동시에 모니터링할 수 있습니다. 스캔 대상 계정은 설정 파일로 관리되며, 계정 추가/제거 시 BSG Partners에서 제공한 Terraform 설정을 통해 변경합니다.
 
 ## 계정 추가
 
@@ -14,11 +14,11 @@ icon: users
 
 ### 1단계: 대상 계정에 ScanRole 생성
 
-대상 계정에 `ISMS-P-ScanRole`을 생성해야 합니다. 이 역할은 대시보드(중앙 계정)가 대상 계정의 데이터를 읽기 위해 사용합니다.
+대상 계정에 `ISMS-P-ScanRole`을 생성해야 합니다. 이 역할은 대시보드(중앙 계정)가 대상 계정의 보안 데이터를 읽기 위해 사용합니다.
 
 | 흐름 | 설명 |
 | --- | --- |
-| 중앙 계정 (대시보드) | Lambda 실행 역할이 AssumeRole + ExternalId로 대상 계정 접근 |
+| 중앙 계정 (대시보드) | 대상 계정에 크로스 어카운트 접근 |
 | → 대상 계정 ScanRole | 읽기 전용으로 보안 데이터 수집 |
 
 **필요 권한:** 보안 감사를 위한 읽기 권한 (SecurityAudit, ViewOnlyAccess), Security Hub 읽기, CloudTrail 읽기
@@ -28,21 +28,21 @@ icon: users
 </Info>
 
 <Tip>
-  **자동 프로비저닝:** `ensure_scan_roles` 기능이 활성화되어 있으면, ScanRole이 자동으로 생성/업데이트됩니다.
+  **자동 프로비저닝:** `ensure_scan_roles` 기능이 활성화되어 있으면, ScanRole이 자동으로 생성/업데이트됩니다. 별도로 역할을 만들 필요 없이 자동 처리됩니다.
 </Tip>
 
-### 2단계: Terraform 변수에 계정 추가
+### 2단계: 설정에 계정 추가
 
-Terraform 변수 `target_account_ids`에 새 계정 ID를 추가하고 적용하면, `accounts.json`이 자동으로 업데이트됩니다.
+Terraform 설정의 `target_account_ids`에 새 계정 ID를 추가하고 적용합니다. 적용이 완료되면 대상 계정 목록이 자동으로 업데이트됩니다.
 
 ## 계정 제거
 
-1. Terraform 변수 `target_account_ids`에서 해당 계정 ID 제거
+1. Terraform 설정의 `target_account_ids`에서 해당 계정 ID 제거
 2. Terraform 적용
 3. (선택) 대상 계정에서 `ISMS-P-ScanRole` 삭제
 
 <Info>
-  계정을 제거해도 이미 수집된 과거 데이터는 S3에 보존됩니다 (raw/ 90일, processed/ 영구).
+  계정을 제거해도 이미 수집된 과거 데이터는 보존됩니다 (raw 데이터 90일, 분석 데이터 영구).
 </Info>
 
 ## 병렬 처리 제한

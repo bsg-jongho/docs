@@ -24,17 +24,17 @@ icon: clock
 최신 ISMS-P 프레임워크 기준의 보안 점검 결과를 수집합니다.
 
 **수집 내용:**
-- 각 점검 항목(check)에 대해 **PASS**(통과) 또는 **FAIL**(미통과) 판정
+- 각 점검 항목에 대해 **PASS**(통과) 또는 **FAIL**(미통과) 판정
 - 점검 대상: IAM, S3, EC2, VPC, KMS, CloudTrail, Lambda 등 주요 AWS 서비스
-- 200개 이상의 보안 점검 항목
+- **546개** 보안 점검 항목
 
 | 필드 | 예시 값 | 설명 |
 | --- | --- | --- |
-| status_code | FAIL | 점검 결과 (PASS/FAIL) |
-| severity | Critical | 심각도 (Critical/High/Medium/Low) |
-| check_id | iam_root_mfa_enabled | 점검 항목 코드 |
-| resource_arn | arn:aws:iam::123456:root | 대상 리소스 |
-| categories | Access Control | ISMS-P 도메인 분류 |
+| 점검 결과 | FAIL | PASS 또는 FAIL |
+| 심각도 | Critical | Critical / High / Medium / Low |
+| 점검 항목 | Root 계정 MFA 활성화 | 점검 항목명 |
+| 대상 리소스 | arn:aws:iam::123456:root | 점검 대상 리소스 |
+| 보안 도메인 | Access Control | ISMS-P 도메인 분류 |
 
 <Info>
   **일일 비교:** 전일 결과와 자동 비교하여 **NEW**(신규 실패), **FIXED**(해결), **REGRESSION**(재발)을 자동 분류합니다. 이 결과는 [개선 현황](/isms-p-dashboard/menu-guide/remediation) 시트에서 확인할 수 있습니다.
@@ -66,32 +66,32 @@ AWS 보안 서비스들이 탐지한 보안 이슈를 수집합니다.
 
 | 카테고리 | 이벤트 | 보안 의미 |
 | --- | --- | --- |
-| **IAM** | CreateUser, DeleteUser, CreateRole, DeleteRole | 계정/역할 변경 — 무단 접근 시도 가능 |
-| **IAM** | AttachUserPolicy, PutUserPolicy | 권한 변경 — 권한 상승 공격 가능 |
-| **IAM** | CreateAccessKey, DeleteAccessKey | 액세스 키 관리 — 키 유출 위험 |
-| **로그인** | ConsoleLogin | 콘솔 로그인 — 무단 접근 탐지 |
-| **EC2/VPC** | AuthorizeSecurityGroupIngress/Egress | 보안 그룹 변경 — 네트워크 노출 위험 |
-| **KMS** | CreateKey, DisableKey, ScheduleKeyDeletion | 암호화 키 조작 — 데이터 보호 약화 |
-| **S3** | PutBucketPolicy, PutBucketAcl, PutPublicAccessBlock | 버킷 정책 변경 — 데이터 노출 위험 |
-| **CloudTrail** | StopLogging, DeleteTrail | 감사 로그 조작 — 증거 인멸 시도 |
-| **Lambda** | CreateFunction, UpdateFunctionCode, DeleteFunction | 서버리스 코드 변경 — 악성 코드 삽입 가능 |
-| **CloudWatch** | DeleteLogGroup, DeleteLogStream | 로그 삭제 — 증거 인멸 시도 |
+| **IAM** | CreateUser, DeleteUser, CreateRole, DeleteRole | 계정/역할 변경 -- 무단 접근 시도 가능 |
+| **IAM** | AttachUserPolicy, PutUserPolicy | 권한 변경 -- 권한 상승 공격 가능 |
+| **IAM** | CreateAccessKey, DeleteAccessKey | 액세스 키 관리 -- 키 유출 위험 |
+| **로그인** | ConsoleLogin | 콘솔 로그인 -- 무단 접근 탐지 |
+| **EC2/VPC** | AuthorizeSecurityGroupIngress/Egress | 보안 그룹 변경 -- 네트워크 노출 위험 |
+| **KMS** | CreateKey, DisableKey, ScheduleKeyDeletion | 암호화 키 조작 -- 데이터 보호 약화 |
+| **S3** | PutBucketPolicy, PutBucketAcl, PutPublicAccessBlock | 버킷 정책 변경 -- 데이터 노출 위험 |
+| **CloudTrail** | StopLogging, DeleteTrail | 감사 로그 조작 -- 증거 인멸 시도 |
+| **Lambda** | CreateFunction, UpdateFunctionCode, DeleteFunction | 서버리스 코드 변경 -- 악성 코드 삽입 가능 |
+| **CloudWatch** | DeleteLogGroup, DeleteLogStream | 로그 삭제 -- 증거 인멸 시도 |
 
 **수집 범위:**
 - **글로벌 이벤트** (IAM, ConsoleLogin): us-east-1에서만 수집
 - **리전별 이벤트** (EC2, KMS, S3 등): 활성화된 모든 리전에서 수집
 
-## 계정별 병렬 처리
+## 계정 스캔 처리
 
 <Info>
-  각 계정에서 3개 수집기가 **동시 실행**되고, 최대 5개 계정이 **병렬 처리**됩니다. 모든 계정 스캔 완료 후 Glue ETL이 일괄 변환합니다.
+  각 계정에서 3개 수집기가 **동시 실행**되고, 최대 5개 계정이 **병렬 처리**됩니다. 모든 계정 스캔 완료 후 데이터 변환이 일괄 수행됩니다.
 </Info>
 
 | 단계 | 처리 방식 | 소요 시간 |
 | --- | --- | --- |
 | 계정별 스캔 | 계정 내 3개 수집기 동시 실행, 최대 5개 계정 병렬 | 5-10분/계정 |
-| Glue ETL 변환 | 전체 데이터 일괄 변환 | 10-20분 |
-| 대시보드 반영 | Athena DIRECT_QUERY | 즉시 |
+| 데이터 변환 | 전체 데이터 일괄 변환 | 10-20분 |
+| 대시보드 반영 | DIRECT_QUERY 방식 | 즉시 |
 
 | 계정 수 | 예상 스캔 시간 |
 | --- | --- |
@@ -100,5 +100,5 @@ AWS 보안 서비스들이 탐지한 보안 이슈를 수집합니다.
 | 11-20 | 90-120분 |
 
 <Info>
-  최대 5개 계정이 동시에 스캔됩니다. 등록된 계정이 5개를 초과하면 순차적으로 처리됩니다.
+  최대 20개 계정까지 등록할 수 있으며, 한 번에 5개 계정이 동시 스캔됩니다. 등록된 계정이 5개를 초과하면 순차적으로 처리됩니다.
 </Info>

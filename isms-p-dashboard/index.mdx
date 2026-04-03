@@ -5,29 +5,38 @@ icon: shield-halved
 ---
 
 <Info>
-  ISMS-P Intelligence Dashboard는 매일 자동 스캔을 통해 AWS 환경의 보안 상태를 점검하고, 보안 담당자가 ISMS-P 인증 기준에 맞는 컴플라이언스를 관리할 수 있도록 지원합니다.
+  ISMS-P 인증 심사를 준비하거나 보안 컴플라이언스를 지속적으로 관리해야 하는 보안팀을 위한 솔루션입니다. 매일 새벽 02:00(KST)에 AWS 환경을 자동 스캔하여, 수동 점검 없이도 현재 보안 상태를 정확하게 파악할 수 있습니다.
 </Info>
+
+## 주요 특징
+
+- **546개 보안 점검 항목**을 매일 자동으로 실행하여 ISMS-P 인증 기준 전체를 커버합니다.
+- **최대 20개 AWS 계정**을 동시에 모니터링하여 멀티 계정 환경에서도 통합 관리가 가능합니다.
+- 컴플라이언스 스캔 결과, Security Hub 발견사항(GuardDuty/Inspector), CloudTrail 보안 이벤트를 **하나의 대시보드에서 통합** 분석합니다.
+- 서버리스 아키텍처 기반으로 별도 인프라 운영 없이 **AWS Marketplace 구독만으로 바로 사용**할 수 있습니다.
+
+## 문서 안내
 
 <Columns cols={3}>
   <Card title="운영 매뉴얼" href="/isms-p-dashboard/operations-manual" icon="book-open">
-    대시보드의 전체 구성, KPI 읽는 법, 시트 매핑을 소개합니다.
+    대시보드의 전체 구성과 KPI 해석 방법, ISMS-P 인증 기준과 시트 매핑을 안내합니다.
   </Card>
 
   <Card title="메뉴 가이드" href="/isms-p-dashboard/menu-guide/" icon="table-columns">
-    9개 대시보드 시트별 구성 요소, KPI 판단 기준, 조치 방법
+    9개 대시보드 시트별 구성 요소, 주요 지표 판단 기준, 조치 방법을 설명합니다.
   </Card>
 
   <Card title="설정 가이드" href="/isms-p-dashboard/settings/" icon="gear">
-    대상 계정, 스캔 스케줄, 알림 설정
+    모니터링 대상 계정 추가, 스캔 스케줄 변경, 알림 설정 방법을 안내합니다.
   </Card>
 </Columns>
 
 <Columns cols={2}>
   <Card title="운영 절차" href="/isms-p-dashboard/operations/" icon="clipboard-check">
-    일상 점검, 장애 대응, FAQ
+    일상 점검 체크리스트, 장애 대응 절차, 자주 묻는 질문을 정리했습니다.
   </Card>
 
   <Card title="시스템 아키텍처" href="/isms-p-dashboard/overview/architecture" icon="diagram-project">
-    데이터 수집부터 시각화까지의 전체 시스템 흐름
+    데이터 수집부터 시각화까지의 전체 시스템 흐름과 구성 요소를 설명합니다.
   </Card>
 </Columns>

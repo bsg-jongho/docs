@@ -36,12 +36,12 @@ icon: circle-question
 
 아닙니다. 다음 단계가 필요합니다:
 1. 대상 계정에 ScanRole 생성 ([계정 관리](/isms-p-dashboard/settings/accounts) 참고)
-2. Terraform 변수에 계정 추가 후 적용
+2. Terraform 설정에 계정 추가 후 적용
 3. 다음 정기 스캔(02:00 KST)에서 자동 포함
 
 ### 특정 계정만 스캔에서 제외할 수 있나요?
 
-Terraform 변수 `target_account_ids`에서 해당 계정을 제거하고 적용하면 됩니다. 이미 수집된 데이터는 유지됩니다.
+Terraform 설정에서 해당 계정을 제거하고 적용하면 됩니다. 이미 수집된 데이터는 유지됩니다.
 
 ## 대시보드 관련
 

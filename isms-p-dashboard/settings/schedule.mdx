@@ -21,14 +21,11 @@ icon: clock
 
 ## 스케줄 변경
 
-Terraform 변수를 통해 변경합니다:
+Terraform 설정에서 스캔 시작 시간을 변경할 수 있습니다. `scan_schedule_expression`과 `scan_schedule_timezone` 값을 원하는 시간으로 수정한 후 Terraform을 적용합니다.
 
-```
-scan_schedule_expression = "cron(0 18 * * ? *)"  # 03:00 KST
-scan_schedule_timezone   = "Asia/Seoul"
-```
-
-변경 후 Terraform 적용이 필요합니다.
+<Info>
+  스케줄 변경이 필요한 경우 BSG Partners 기술 지원에 문의하시면 안내를 받으실 수 있습니다.
+</Info>
 
 <Warning>
   스캔 시간을 너무 이르게 설정하면(예: 00:30 KST) 전일 이벤트가 아직 전파되지 않아 **누락될 수 있습니다.**
