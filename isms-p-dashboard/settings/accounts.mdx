@@ -37,34 +37,47 @@ isms-p target add <계정 ID>
 
 ## 방법 2: Terraform Cloud UI에서 추가
 
-Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을 추가할 수 있습니다.
+Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을 추가할 수 있습니다. 변수 슬롯은 `target_01`부터 `target_20`까지 20개가 미리 정의되어 있으며, 사용할 슬롯에 값을 채우는 방식입니다.
 
-### 1단계: target_slot_map에 계정 ID 추가
+### 1단계: 현재 슬롯 상태 확인
 
-워크스페이스 > Variables에서 `target_slot_map` 변수를 찾아 계정 ID를 추가합니다.
+워크스페이스 > Variables에서 `target_slot_map`을 확인하여 현재 몇 번째 슬롯까지 사용 중인지 파악합니다.
 
-예시 (3번째 계정 추가):
+예시 (현재 2개 계정이 등록된 상태):
+```
+["111111111111", "222222222222"]
+```
+
+### 2단계: target_slot_map 끝에 계정 ID 추가
+
+**반드시 기존 목록의 끝에 추가하세요.** 중간에 삽입하거나 순서를 변경하면 기존 계정의 슬롯 매핑이 꼬여 자격 증명이 다른 계정에 연결될 수 있습니다.
+
 ```
 ["111111111111", "222222222222", "333333333333"]
 ```
 
-### 2단계: 해당 슬롯의 자격 증명 입력
-
-추가한 계정이 3번째라면 다음 변수를 설정합니다:
-- `target_03_access_key` — Access Key ID
-- `target_03_secret_key` — Secret Access Key (Sensitive로 설정)
-
 <Warning>
-  슬롯 번호는 `target_slot_map`의 순서와 일치해야 합니다. 첫 번째 계정은 `target_01_*`, 두 번째는 `target_02_*` 입니다.
+  **기존 계정의 순서를 절대 변경하지 마세요.** 슬롯 번호와 순서가 1:1 매핑되어 있습니다. 첫 번째 = `target_01_*`, 두 번째 = `target_02_*` 입니다. 순서가 바뀌면 자격 증명이 잘못된 계정에 적용됩니다.
 </Warning>
 
-### 3단계: Apply 실행
+### 3단계: 해당 슬롯의 자격 증명 입력
+
+추가한 계정이 3번째라면, 다음 두 변수를 찾아서 값을 입력합니다:
+
+| 변수명 | 값 | 설정 |
+| --- | --- | --- |
+| `target_03_access_key` | 대상 계정의 Access Key ID | — |
+| `target_03_secret_key` | 대상 계정의 Secret Access Key | **Sensitive 체크** |
+
+이 변수들은 이미 빈 값으로 존재합니다. 새로 만드는 것이 아니라 기존 변수의 값을 채우는 것입니다.
+
+<Warning>
+  **`target_slot_map`과 자격 증명은 반드시 함께 설정하세요.** 계정 ID만 추가하고 자격 증명을 입력하지 않으면, ScanRole을 생성할 수 없어 해당 계정의 스캔이 실패합니다.
+</Warning>
+
+### 4단계: Apply 실행
 
 변수 저장 후 "Start new run" → "Plan and apply"를 실행합니다. Apply가 완료되면 다음 스캔 시 자동으로 ScanRole이 생성됩니다.
-
-<Warning>
-  **자격 증명 없이 계정 ID만 추가하면 스캔이 실패합니다.** `target_slot_map`에 계정을 추가했다면, 반드시 해당 슬롯의 `access_key`와 `secret_key`도 함께 입력한 뒤 Apply를 실행하세요. 자격 증명이 없으면 ScanRole을 생성할 수 없어 해당 계정의 스캔이 건너뛰어집니다.
-</Warning>
 
 ## 자동으로 일어나는 일
 
