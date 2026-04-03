@@ -1,0 +1,6 @@
+/* 모바일 반응형: Columns 컴포넌트가 작은 화면에서 1열로 전환 */
+@media (max-width: 768px) {
+  [class*="grid-cols-"] {
+    grid-template-columns: 1fr !important;
+  }
+}
