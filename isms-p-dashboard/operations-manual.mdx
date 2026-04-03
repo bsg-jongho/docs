@@ -13,16 +13,16 @@ icon: book-open
 매일 자동으로 수행되는 3가지 수집 작업:
 
 <Columns cols={3}>
-  <Card title="컴플라이언스 자동 점검" href="/isms-p-dashboard/overview/data-collection" icon="magnifying-glass" horizontal>
-    최신 ISMS-P 프레임워크 기준 546개 보안 항목을 자동 점검하여 PASS/FAIL 판정
+  <Card title="보안 점검" href="/isms-p-dashboard/overview/data-collection" icon="magnifying-glass" horizontal>
+    ISMS-P 기준 546개 항목 자동 점검 (PASS/FAIL)
   </Card>
 
-  <Card title="Security Hub Findings 수집" href="/isms-p-dashboard/menu-guide/vulnerability" icon="bell" horizontal>
-    GuardDuty, Inspector 등 AWS 보안 서비스의 위협 탐지 결과를 통합 수집
+  <Card title="위협 탐지" href="/isms-p-dashboard/menu-guide/vulnerability" icon="bell" horizontal>
+    GuardDuty, Inspector 등 보안 위협 통합 수집
   </Card>
 
-  <Card title="CloudTrail 보안 이벤트" href="/isms-p-dashboard/overview/data-collection" icon="file-lines" horizontal>
-    IAM 변경, 보안 그룹 변경, 암호화 키 조작 등 보안 관련 API 호출 이력을 수집
+  <Card title="변경 이력" href="/isms-p-dashboard/overview/data-collection" icon="file-lines" horizontal>
+    IAM, 보안 그룹, 암호화 키 등 보안 관련 API 호출 추적
   </Card>
 </Columns>
 
