@@ -91,7 +91,7 @@
         "href": "https://www.bsgglobal.com/"
       },
       {
-        "label": "제품 소개",
+        "label": "BSG 등록 제품 소개",
         "href": "https://marketplace.bsggo.com/"
       },
       {
@@ -115,7 +115,7 @@
         "header": "제품",
         "items": [
           {
-            "label": "제품 소개",
+            "label": "BSG 등록 제품 소개",
             "href": "https://marketplace.bsggo.com/"
           },
           {
