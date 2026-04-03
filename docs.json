@@ -95,8 +95,8 @@
     }
   },
   "logo": {
-    "light": "/logo/bsg-partners-light.png",
-    "dark": "/logo/bsg-partners-dark.png"
+    "light": "/logo/bsg-partners-light.svg",
+    "dark": "/logo/bsg-partners-dark.svg"
   },
   "navbar": {
     "links": [
