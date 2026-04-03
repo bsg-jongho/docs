@@ -8,34 +8,68 @@ icon: users
 
 대시보드는 최대 20개의 AWS 계정을 동시에 모니터링할 수 있습니다. 계정을 추가하면 대상 계정에 읽기 전용 스캔 역할(`ISMS-P-ScanRole`)이 **자동으로 생성**되며, 이후 매일 스캔이 수행됩니다.
 
-## 계정 추가
+계정 추가/제거는 **CLI**와 **Terraform Cloud UI** 두 가지 방법으로 할 수 있습니다.
 
-### CLI를 통한 추가
+## 사전 준비
 
-```
+대상 계정에 IAM 사용자를 생성하고 **IAMFullAccess** 권한을 부여한 뒤, Access Key와 Secret Key를 발급받으세요.
+
+<Info>
+  이 자격 증명은 스캔 역할(`ISMS-P-ScanRole`)을 자동 생성하는 데만 사용됩니다. 역할 생성이 완료된 후에는 해당 IAM 사용자와 액세스 키를 삭제해도 됩니다.
+</Info>
+
+## 방법 1: CLI로 추가
+
+```bash
 isms-p target add <계정 ID>
 ```
 
-실행하면 대상 계정의 IAM 자격 증명(Access Key, Secret Key)을 입력하라는 안내가 표시됩니다.
+실행하면 Access Key ID와 Secret Access Key를 입력하라는 안내가 표시됩니다. 입력 완료 후 Terraform Apply가 자동 실행되며, 완료 시 즉시 스캔을 실행할지 물어봅니다.
 
-| 입력 항목 | 설명 |
+**기타 CLI 명령:**
+
+| 명령 | 설명 |
 | --- | --- |
-| 계정 ID | 추가할 AWS 계정의 12자리 ID |
-| Access Key ID | 대상 계정에서 생성한 IAM 사용자의 액세스 키 |
-| Secret Access Key | 해당 액세스 키의 시크릿 키 |
+| `isms-p target list` | 등록된 대상 계정 목록 확인 |
+| `isms-p target auth <계정 ID>` | 기존 계정의 자격 증명 변경 |
+| `isms-p target remove <계정 ID>` | 대상 계정 제거 (ScanRole도 자동 삭제) |
+| `isms-p scan` | 수동 스캔 즉시 실행 |
 
-<Info>
-  대상 계정의 IAM 사용자에는 **IAMFullAccess** 권한이 필요합니다. 이 자격 증명은 스캔 역할을 자동 생성하는 데만 사용되며, 역할 생성이 완료된 후에는 해당 IAM 사용자와 액세스 키를 삭제해도 됩니다.
-</Info>
+## 방법 2: Terraform Cloud UI에서 추가
 
-### 자동으로 일어나는 일
+Terraform Cloud 워크스페이스에서 직접 변수를 수정하여 계정을 추가할 수 있습니다.
 
-자격 증명을 입력하면 이후 과정은 모두 자동으로 처리됩니다.
+### 1단계: target_slot_map에 계정 ID 추가
+
+워크스페이스 > Variables에서 `target_slot_map` 변수를 찾아 계정 ID를 추가합니다.
+
+예시 (3번째 계정 추가):
+```
+["111111111111", "222222222222", "333333333333"]
+```
+
+### 2단계: 해당 슬롯의 자격 증명 입력
+
+추가한 계정이 3번째라면 다음 변수를 설정합니다:
+- `target_03_access_key` — Access Key ID
+- `target_03_secret_key` — Secret Access Key (Sensitive로 설정)
+
+<Warning>
+  슬롯 번호는 `target_slot_map`의 순서와 일치해야 합니다. 첫 번째 계정은 `target_01_*`, 두 번째는 `target_02_*` 입니다.
+</Warning>
+
+### 3단계: Apply 실행
+
+변수 저장 후 "Start new run" → "Plan and apply"를 실행합니다. Apply가 완료되면 다음 스캔 시 자동으로 ScanRole이 생성됩니다.
+
+## 자동으로 일어나는 일
+
+어떤 방법으로 계정을 추가하든, 이후 과정은 동일하게 자동 처리됩니다.
 
 | 순서 | 처리 내용 |
 | --- | --- |
-| 1 | 입력한 자격 증명이 안전하게 저장됨 |
-| 2 | Terraform이 대상 계정 목록을 업데이트 |
+| 1 | 입력한 자격 증명이 Secrets Manager에 안전하게 저장됨 |
+| 2 | 대상 계정 목록이 업데이트됨 |
 | 3 | 다음 스캔 시작 시, 대상 계정에 `ISMS-P-ScanRole`이 자동 생성됨 |
 | 4 | 생성된 역할로 읽기 전용 보안 데이터 수집 시작 |
 
@@ -43,21 +77,11 @@ isms-p target add <계정 ID>
   **ScanRole은 읽기 전용입니다.** 대상 계정의 리소스를 수정하거나 삭제하지 않습니다. 부여되는 권한은 `ViewOnlyAccess`(리소스 조회)와 `SecurityAudit`(보안 감사)뿐입니다.
 </Info>
 
-### 보안 장치
-
-대상 계정에 생성되는 스캔 역할에는 다음과 같은 보안 장치가 적용됩니다.
-
-| 보안 장치 | 설명 |
-| --- | --- |
-| ExternalId | 중앙 계정 ID 기반의 고유 식별자. 다른 AWS 계정이 이 역할을 무단으로 사용하는 것을 방지 |
-| 읽기 전용 정책 | ViewOnlyAccess + SecurityAudit만 부여. 리소스 변경 권한 없음 |
-| 세션 제한 | 최대 1시간의 세션 유효 기간 |
-
 ## 계정 제거
 
-```
-isms-p target remove <계정 ID>
-```
+**CLI:** `isms-p target remove <계정 ID>`
+
+**Terraform Cloud UI:** `target_slot_map`에서 해당 계정 ID를 제거하고, 해당 슬롯의 `access_key`/`secret_key` 변수를 비운 뒤 Apply를 실행합니다.
 
 제거 시 대상 계정의 `ISMS-P-ScanRole`도 자동으로 삭제됩니다. 이미 수집된 과거 데이터는 보존됩니다 (원본 데이터 90일, 분석 데이터 영구).
 
