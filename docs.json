@@ -19,9 +19,9 @@
               {
                 "group": "ISMS-P Intelligence Dashboard",
                 "icon": "shield-halved",
+                "href": "isms-p-dashboard/index",
                 "expanded": false,
                 "pages": [
-                  "isms-p-dashboard/index",
                   "isms-p-dashboard/operations-manual",
                   {
                     "group": "개요",
@@ -95,8 +95,8 @@
     }
   },
   "logo": {
-    "light": "/logo/bsg-partners.png",
-    "dark": "/logo/bsg-partners.png"
+    "light": "/logo/bsg-partners-light.png",
+    "dark": "/logo/bsg-partners-dark.png"
   },
   "navbar": {
     "links": [
