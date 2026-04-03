@@ -80,18 +80,6 @@
       }
     ],
     "global": {
-      "anchors": [
-        {
-          "anchor": "BSG Marketplace",
-          "href": "https://marketplace.bsggo.com/",
-          "icon": "globe"
-        },
-        {
-          "anchor": "AWS Marketplace",
-          "href": "https://aws.amazon.com/marketplace/seller-profile?id=seller-f57nrtrpgz6xe",
-          "icon": "aws"
-        }
-      ]
     }
   },
   "logo": {
@@ -99,13 +87,31 @@
     "dark": "/logo/bsg-partners-dark.svg"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "BSG Global",
-        "href": "https://www.bsgglobal.com/"
-      }
-    ]
   },
   "footer": {
+    "links": [
+      {
+        "header": "BSG Partners",
+        "items": [
+          {
+            "label": "BSG Partners 홈페이지",
+            "href": "https://www.bsgglobal.com/"
+          }
+        ]
+      },
+      {
+        "header": "제품",
+        "items": [
+          {
+            "label": "제품 소개",
+            "href": "https://marketplace.bsggo.com/"
+          },
+          {
+            "label": "AWS Marketplace에서 구매",
+            "href": "https://aws.amazon.com/marketplace/seller-profile?id=seller-f57nrtrpgz6xe"
+          }
+        ]
+      }
+    ]
   }
 }
