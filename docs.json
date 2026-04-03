@@ -61,17 +61,8 @@
                       "isms-p-dashboard/settings/alerts"
                     ]
                   },
-                  {
-                    "group": "운영 절차",
-                    "icon": "clipboard-check",
-                    "expanded": false,
-                    "pages": [
-                      "isms-p-dashboard/operations/index",
-                      "isms-p-dashboard/operations/daily-check",
-                      "isms-p-dashboard/operations/troubleshooting",
-                      "isms-p-dashboard/operations/faq"
-                    ]
-                  }
+                  "isms-p-dashboard/operations/troubleshooting",
+                  "isms-p-dashboard/operations/faq"
                 ]
               }
             ]
