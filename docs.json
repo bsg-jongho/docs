@@ -22,6 +22,7 @@
                 "href": "isms-p-dashboard/index",
                 "expanded": false,
                 "pages": [
+                  "isms-p-dashboard/installation",
                   "isms-p-dashboard/operations-manual",
                   {
                     "group": "개요",
