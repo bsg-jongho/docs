@@ -22,21 +22,10 @@
                 "href": "isms-p-dashboard/index",
                 "expanded": false,
                 "pages": [
-                  "isms-p-dashboard/installation",
-                  "isms-p-dashboard/operations-manual",
                   {
-                    "group": "개요",
-                    "icon": "circle-info",
-                    "expanded": false,
-                    "pages": [
-                      "isms-p-dashboard/overview/architecture",
-                      "isms-p-dashboard/overview/data-collection"
-                    ]
-                  },
-                  {
-                    "group": "메뉴 가이드",
-                    "icon": "table-columns",
-                    "expanded": false,
+                    "group": "대시보드 운영 매뉴얼",
+                    "icon": "book-open",
+                    "expanded": true,
                     "pages": [
                       "isms-p-dashboard/menu-guide/overview",
                       "isms-p-dashboard/menu-guide/access-control",
@@ -60,7 +49,17 @@
                     ]
                   },
                   "isms-p-dashboard/operations/troubleshooting",
-                  "isms-p-dashboard/operations/faq"
+                  "isms-p-dashboard/operations/faq",
+                  {
+                    "group": "부록",
+                    "icon": "paperclip",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/installation",
+                      "isms-p-dashboard/overview/architecture",
+                      "isms-p-dashboard/overview/data-collection"
+                    ]
+                  }
                 ]
               }
             ]
