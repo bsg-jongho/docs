@@ -23,8 +23,8 @@
                 "expanded": false,
                 "pages": [
                   {
-                    "group": "대시보드 운영 매뉴얼",
-                    "icon": "book-open",
+                    "group": "대시보드 메뉴 가이드",
+                    "icon": "table-columns",
                     "expanded": true,
                     "pages": [
                       "isms-p-dashboard/menu-guide/overview",
@@ -48,8 +48,15 @@
                       "isms-p-dashboard/settings/alerts"
                     ]
                   },
-                  "isms-p-dashboard/operations/troubleshooting",
-                  "isms-p-dashboard/operations/faq",
+                  {
+                    "group": "운영 지원",
+                    "icon": "life-ring",
+                    "expanded": false,
+                    "pages": [
+                      "isms-p-dashboard/operations/troubleshooting",
+                      "isms-p-dashboard/operations/faq"
+                    ]
+                  },
                   {
                     "group": "부록",
                     "icon": "paperclip",
