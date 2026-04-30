@@ -6,19 +6,17 @@ icon: download
 
 ## CLI 설치
 
-현재 최신 버전: **0.4.0**
-
-아래 명령어의 `VERSION`을 최신 버전으로 변경하세요.
+`stable` 채널을 사용하면 항상 최신 안정 버전이 설치됩니다. 재실행하면 자동으로 새 버전으로 갱신됩니다.
 
 <Tabs>
   <Tab title="macOS / Linux / AWS CloudShell">
     ```bash
-    curl -sSL https://marketplace-isms-p-intelligence-dashboard-public.s3.amazonaws.com/releases/VERSION/cli/install.sh | bash
+    curl -sSL https://marketplace-isms-p-intelligence-dashboard-public.s3.amazonaws.com/releases/stable/cli/install.sh | bash
     ```
   </Tab>
   <Tab title="Windows (CMD / PowerShell)">
     ```cmd
-    powershell -c "irm https://marketplace-isms-p-intelligence-dashboard-public.s3.amazonaws.com/releases/VERSION/cli/install.ps1 | iex"
+    powershell -c "irm https://marketplace-isms-p-intelligence-dashboard-public.s3.amazonaws.com/releases/stable/cli/install.ps1 | iex"
     ```
   </Tab>
 </Tabs>
@@ -161,7 +159,15 @@ isms-p install
 설치가 완료되면 다음이 자동으로 처리됩니다:
 
 - **QuickSight Admin 자동 등록**: 설치를 실행한 AWS IAM 사용자/역할이 QuickSight ADMIN으로 자동 등록됩니다. 별도의 QuickSight 사용자 설정이 필요 없습니다.
-- **대시보드 URL 안내**: 설치 완료 메시지에 QuickSight 대시보드 URL이 표시됩니다. 이 URL을 브라우저에서 열면 바로 대시보드를 볼 수 있습니다.
+- **대시보드 URL 안내**: 설치 완료 메시지에 QuickSight 대시보드 URL과 **포털(뷰어 SPA) URL**이 함께 표시됩니다.
+- **관리자 콘솔 자동 활성화**: 설치 시 입력한 관리자 이메일이 Cognito **admin** 그룹에 자동으로 등록되어, 포털 로그인 후 관리자 콘솔(`/admin`)에 접근할 수 있습니다.
+
+#### 접근 경로 두 가지
+
+| 경로 | 대상 | 인증 | 용도 |
+| --- | --- | --- | --- |
+| **QuickSight 대시보드 URL** | AWS 콘솔 접근 권한 보유자 | AWS IAM | QuickSight 콘솔에서 직접 열람 |
+| **포털 URL** (`https://xxxxx.cloudfront.net`) | 모든 열람자 (AWS 권한 불필요) | Cognito (이메일/비밀번호, Google 등) | 뷰어로 대시보드 열람 + 관리자 콘솔 접근 |
 
 <Tip>
   **QuickSight 대시보드 접속 방법:**
@@ -172,12 +178,22 @@ isms-p install
   URL을 잊어버린 경우 `isms-p status`로 다시 확인할 수 있습니다.
 </Tip>
 
-<Accordion title="다른 사용자에게 대시보드 공유">
-  QuickSight 대시보드를 팀원에게 공유하려면 AWS QuickSight 콘솔에서 사용자를 추가해야 합니다.
+<Tip>
+  **포털 / 관리자 콘솔 접속 방법:**
+  1. 설치 완료 시 표시된 포털 URL(`https://xxxxx.cloudfront.net`)을 브라우저에서 엽니다
+  2. 설치 시 입력한 관리자 이메일로 로그인합니다 (최초 로그인 시 비밀번호 설정)
+  3. 로그인 후 헤더 우측의 **"관리자"** 링크를 클릭하면 관리자 콘솔(`/admin`)로 이동합니다
 
-  1. AWS 콘솔 > QuickSight > 사용자 관리
-  2. 사용자 초대 (이메일 주소 입력)
-  3. 대시보드에서 공유 설정
+  관리자 콘솔에서 브랜딩, 인증 설정, 사용자, 라이센스, 커스텀 도메인을 관리할 수 있습니다.
+  자세한 내용은 [설정 가이드 > 관리자 콘솔](/isms-p-dashboard/settings/admin-console)을 참조하세요.
+</Tip>
+
+<Accordion title="다른 사용자에게 대시보드 공유">
+  - **포털 (권장)**: 추가 사용자가 포털에 직접 가입하면 자동으로 뷰어 그룹에 할당됩니다 (허용 도메인 설정 시 그 도메인 이메일만 가능). AWS 권한이 필요 없습니다.
+  - **QuickSight 콘솔 직접 접속**: AWS QuickSight 콘솔에서 사용자를 초대하고 대시보드에 권한을 부여합니다.
+    1. AWS 콘솔 > QuickSight > 사용자 관리
+    2. 사용자 초대 (이메일 주소 입력)
+    3. 대시보드에서 공유 설정
 </Accordion>
 
 ### Step 4. 상태 확인
@@ -191,6 +207,67 @@ isms-p status
 <Frame>
   <img src="/isms-p-dashboard/images/cli-status.png" alt="상태 확인" />
 </Frame>
+
+---
+
+## 업데이트
+
+업데이트는 두 가지 경로로 처리됩니다.
+
+| 구분 | 변경 대상 | 사용자 작업 |
+| --- | --- | --- |
+| 자동 반영 | 스캔 로직(Lambda 이미지), Terraform 모듈, IAM 정책, 대시보드 정의 | 없음 |
+| 재설치 | Bootstrap / CloudFormation 템플릿이 변경된 메이저 업데이트 | 최신 CLI 다운로드 → `uninstall` → `install` |
+
+### 1. 자동 반영 (사용자 작업 불필요)
+
+설치된 환경은 제품 릴리스 채널(Stable)을 추적합니다.
+신규 버전이 릴리스되면 다음 항목이 **다음 자동 apply 시 고객 환경에 자동으로 반영**됩니다.
+
+- 스캔 로직 (Lambda 컨테이너 이미지)
+- Terraform 모듈 (Step Functions, Glue, Athena, QuickSight 등)
+- TFC Run Role IAM 정책 (core / analytics)
+- 대시보드 정의 (QuickSight)
+
+신규 릴리스가 vendor 레포(`release/stable`)에 push되는 시점에 Terraform Cloud가 자동으로 plan/apply를 실행합니다.
+
+<Info>
+  자동 반영을 즉시 트리거하고 싶을 때는 Terraform Cloud 콘솔에서 해당 workspace의 **Actions > Start new run**을 실행하면 됩니다.
+</Info>
+
+### 2. 재설치 (Bootstrap 변경 시)
+
+Bootstrap(CloudFormation 템플릿, OIDC/Role 구성, TFC 변수 스키마 등)이 변경된 메이저 업데이트는 자동 반영되지 않으며, **최신 CLI를 다운로드한 뒤 기존 환경을 제거하고 새로 설치해야 합니다.**
+
+**Step 1.** 최신 CLI 다운로드 — 위 [CLI 설치](#cli-설치) 명령어를 다시 실행하면 새 버전으로 갱신됩니다.
+
+**Step 2.** 제거 후 재설치
+
+```bash
+isms-p uninstall
+isms-p install
+```
+
+또는 `isms-p install`만 실행해도 기존 설치를 자동으로 감지하여 **"제거 후 재설치"** 옵션을 제공합니다.
+
+<Info>
+  재설치 시 설정 파일(`~/.isms-p-dashboard/config.yaml`)은 보존되어 이전 입력값(TFC 조직, 관리자 이메일, 대상 계정 등)을 재사용할 수 있습니다.
+</Info>
+
+<Warning>
+  **과거 스캔 데이터는 자동으로 이어지지 않습니다.**
+
+  재설치 시 새로운 S3 Data Lake 버킷이 생성됩니다. 기존 버킷을 남겨두더라도 자동으로 연결되지 않으므로,
+  과거 스캔 이력을 유지하려면 기존 버킷의 데이터를 새 버킷으로 직접 복사해야 합니다 (`aws s3 sync` 등).
+
+  데이터 마이그레이션이 필요하면 [mp_support@bsgglobal.com](mailto:mp_support@bsgglobal.com)으로 문의하세요.
+</Warning>
+
+<Info>
+  **재설치가 필요한지 어떻게 알 수 있나요?**
+
+  현재 자동 고지 채널은 운영되지 않고 있습니다. 재설치 필요 여부가 의심되면 [mp_support@bsgglobal.com](mailto:mp_support@bsgglobal.com)으로 문의하세요.
+</Info>
 
 ---
 
@@ -223,8 +300,7 @@ isms-p uninstall
   `isms-p uninstall` 후 `isms-p install`로 재설치할 수 있습니다.
   설정 파일(`~/.isms-p-dashboard/config.yaml`)은 보존되어 이전 설정을 재사용할 수 있습니다.
 
-  - **S3를 남겨둔 경우**: 기존 버킷을 자동 감지하여 재사용합니다. 과거 데이터도 대시보드에 그대로 표시됩니다.
-  - **S3를 삭제한 경우**: 새 버킷이 생성되고 빈 상태에서 시작합니다.
+  - **S3 Data Lake**: 재설치 시 항상 새 버킷이 생성됩니다. 기존 버킷을 남겨두어도 자동으로 연결되지 않으므로, 과거 데이터를 유지하려면 새 버킷으로 직접 복사해야 합니다.
   - **QuickSight 구독을 남겨둔 경우**: 기존 구독을 사용하여 대시보드만 재생성합니다.
   - **QuickSight 구독을 해지한 경우**: 구독부터 새로 생성합니다.
 </Accordion>

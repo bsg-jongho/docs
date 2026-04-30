@@ -44,6 +44,7 @@
                     "expanded": false,
                     "pages": [
                       "isms-p-dashboard/settings/accounts",
+                      "isms-p-dashboard/settings/admin-console",
                       "isms-p-dashboard/settings/schedule",
                       "isms-p-dashboard/settings/alerts"
                     ]
